@@ -1,14 +1,19 @@
-const path = require("path");
+const { join } = require("path");
 
 const express = require("express");
-const dotenv = require("dotenv");
-const morgan = require("morgan");
 const expressHandlebars = require("express-handlebars");
+const session = require("express-session");
+const passport = require("passport");
+const { config } = require("dotenv");
+const morgan = require("morgan");
 
 const { databaseConnection } = require("./config/mongo.config");
 
 // Dotenv Config
-dotenv.config({ path: "./config/config.env" });
+config({ path: "./config/config.env" });
+
+// Passport Config
+require("./config/passport.config")(passport);
 
 // Init Port
 const PORT = process.env.PORT || 5000;
@@ -31,8 +36,21 @@ app.engine(
 );
 app.set("view engine", ".hbs");
 
+// Sessions
+app.use(
+	session({
+		secret: "keyboard storybook",
+		resave: false,
+		saveUninitialized: false
+	})
+);
+
+// Passport Middlewares
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Set Public Folder
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(join(__dirname, "public")));
 
 // Routes
 app.use("/", require("./routes/index.route"));
