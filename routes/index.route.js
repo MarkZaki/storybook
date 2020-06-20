@@ -3,7 +3,7 @@ const router = require("express").Router();
 //@desc: Login Page
 //@route: GET /
 router.get("/", (req, res) => {
-	res.render("login");
+	res.render("login", { layout: "login" });
 });
 
 //@desc: Dashboard

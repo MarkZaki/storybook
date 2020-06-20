@@ -1,3 +1,5 @@
+const path = require("path");
+
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
@@ -28,6 +30,9 @@ app.engine(
 	expressHandlebars({ defaultLayout: "main", extname: ".hbs" })
 );
 app.set("view engine", ".hbs");
+
+// Set Public Folder
+app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/", require("./routes/index.route"));
