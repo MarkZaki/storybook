@@ -54,6 +54,7 @@ app.use(express.static(join(__dirname, "public")));
 
 // Routes
 app.use("/", require("./routes/index.route"));
+app.use("/auth", require("./routes/auth.route"));
 
 // Listen To Port
 app.listen(PORT, () =>
