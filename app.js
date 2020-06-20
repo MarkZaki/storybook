@@ -10,7 +10,7 @@ const morgan = require("morgan");
 const { databaseConnection } = require("./config/mongo.config");
 
 // Dotenv Config
-config({ path: "./config/config.env" });
+config();
 
 // Passport Config
 require("./config/passport.config")(passport);
