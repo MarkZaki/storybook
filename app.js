@@ -6,6 +6,8 @@ const session = require("express-session");
 const passport = require("passport");
 const { config } = require("dotenv");
 const morgan = require("morgan");
+const mongooseConnection = require("mongoose").connection;
+const MongoStore = require("connect-mongo")(session);
 
 const { databaseConnection } = require("./config/mongo.config");
 
@@ -41,7 +43,8 @@ app.use(
 	session({
 		secret: "keyboard storybook",
 		resave: false,
-		saveUninitialized: false
+		saveUninitialized: false,
+		store: new MongoStore({ mongooseConnection })
 	})
 );
 
