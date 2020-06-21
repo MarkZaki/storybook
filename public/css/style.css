@@ -15,3 +15,26 @@ p {
 .card-login {
 	width: 100%;
 }
+
+.text-bold {
+	font-weight: bold;
+}
+
+.new-story {
+	display: inline;
+}
+.new-story-phone {
+	display: none;
+}
+
+@media screen and (max-width: 480px) {
+	.new-story {
+		display: none;
+	}
+	.new-story-phone {
+		display: inline;
+	}
+	.login-container {
+		width: 95%;
+	}
+}
