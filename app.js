@@ -4,6 +4,7 @@ const express = require("express");
 const expressHandlebars = require("express-handlebars");
 const session = require("express-session");
 const passport = require("passport");
+const methodOverride = require("method-override");
 const { config } = require("dotenv");
 const morgan = require("morgan");
 const mongooseConnection = require("mongoose").connection;
@@ -26,6 +27,18 @@ const app = express();
 // Init Body Parser
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// Method Override
+app.use(
+	methodOverride(req => {
+		if (req.body && typeof req.body === "object" && "_method" in req.body) {
+			// look in urlencoded POST bodies and delete it
+			var method = req.body._method;
+			delete req.body._method;
+			return method;
+		}
+	})
+);
 
 // Database Connection
 databaseConnection();
