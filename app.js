@@ -23,6 +23,10 @@ const PORT = process.env.PORT || 5000;
 // Init App
 const app = express();
 
+// Init Body Parser
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 // Database Connection
 databaseConnection();
 
@@ -31,11 +35,22 @@ if (process.env.NODE_ENV === "development") {
 	app.use(morgan("dev"));
 }
 
+// Handlebars Helpers
+const {
+	formatDate,
+	editIcon,
+	select,
+	stripTags,
+	truncate
+} = require("./helpers/hbs.helper");
+
 // Set Engine to Handlebars
-app.engine(
-	".hbs",
-	expressHandlebars({ defaultLayout: "main", extname: ".hbs" })
-);
+const handlebarsOption = {
+	defaultLayout: "main",
+	extname: ".hbs",
+	helpers: { formatDate, editIcon, select, stripTags, truncate }
+};
+app.engine(".hbs", expressHandlebars(handlebarsOption));
 app.set("view engine", ".hbs");
 
 // Sessions
@@ -52,12 +67,19 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Set Global Variables
+app.use((req, res, next) => {
+	res.locals.user = req.user || null;
+	next();
+});
+
 // Set Public Folder
 app.use(express.static(join(__dirname, "public")));
 
 // Routes
 app.use("/", require("./routes/index.route"));
 app.use("/auth", require("./routes/auth.route"));
+app.use("/stories", require("./routes/stories.route"));
 
 // Listen To Port
 app.listen(PORT, () =>
